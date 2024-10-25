@@ -6,8 +6,9 @@ metadata:
     app: cryptostream
     tier: postgresql
 spec:
+  storageClassName: cts-postgres-manual
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 10Gi 
+      storage: 5Gi 
