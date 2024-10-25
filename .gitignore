@@ -1,4 +1,3 @@
-/kubernetes/secrets/*
 private
 /terraform/.terraform*
 /terraform/terraform*
