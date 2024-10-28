@@ -1,10 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cts-postgresql-service
+  labels:
+    app: cryptostream
+spec:
+  type: NodePort  
+  ports:
+  - port: 5432
+    targetPort: 5432
+    nodePort: 30000 
+  selector:
+    app: cryptostream
+    tier: postgresql
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cts-postgresql-deployment
   labels:
     app: cryptostream
-    tier: postgresql
 spec:
   replicas: 1 
   selector:
@@ -50,3 +65,34 @@ spec:
       - name: postgresql-persistent-storage
         persistentVolumeClaim:
           claimName: cts-postgresql-pvc 
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cts-postgresql-pv
+  labels:
+    app: cryptostream
+spec:
+  storageClassName: cts-postgres-manual
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  hostPath:
+    path: /tmp/k8s-pv
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cts-postgresql-pvc
+  labels:
+    app: cryptostream
+spec:
+  storageClassName: cts-postgres-manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi 
