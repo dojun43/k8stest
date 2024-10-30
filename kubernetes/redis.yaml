@@ -36,6 +36,15 @@ spec:
       containers:
       - name: redis
         image: redis:7.2
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: cts-redis-secret 
+              key: REDIS_PASSWORD
         ports:
         - containerPort: 6379
           name: redis
+        args:
+        - "--requirepass"
+        - "$(REDIS_PASSWORD)"
